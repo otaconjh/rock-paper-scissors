@@ -7,42 +7,57 @@ function playRound(playerSelection, computerSelection) {
   const rock = "ROCK",
     paper = "PAPER",
     scissors = "SCISSORS",
-    loser = 0,
-    winner = 1;
+    lost = "computer",
+    won = "player";
   playerSelection = playerSelection.toUpperCase();
   computerSelection = computerSelection.toUpperCase();
   if (playerSelection == computerSelection) return ["Tie!", undefined];
   if (playerSelection == rock) {
     if (computerSelection == paper) {
-      return [`You Lose! ${computerSelection} beats ${playerSelection}`, loser];
+      return [`You Lose! ${computerSelection} beats ${playerSelection}`, lost];
     } else {
-      return [`You Win! ${playerSelection} beats ${computerSelection}`, winner];
+      return [`You Win! ${playerSelection} beats ${computerSelection}`, won];
     }
   }
   if (playerSelection == paper) {
     if (computerSelection == scissors) {
-      return [`You Lose! ${computerSelection} beats ${playerSelection}`, loser];
+      return [`You Lose! ${computerSelection} beats ${playerSelection}`, lost];
     } else {
-      return [`You Win! ${playerSelection} beats ${computerSelection}`, winner];
+      return [`You Win! ${playerSelection} beats ${computerSelection}`, won];
     }
   }
   if (playerSelection == scissors) {
-    if (computerSelection == rock)
-      return [`You Lose! ${computerSelection} beats ${playerSelection}`, loser];
-  } else {
-    return [`You Win! ${playerSelection} beats ${computerSelection}`, winner];
+    if (computerSelection == rock) {
+      return [`You Lose! ${computerSelection} beats ${playerSelection}`, lost];
+    } else {
+      return [`You Win! ${playerSelection} beats ${computerSelection}`, won];
+    }
   }
 }
 
-function game() {
-  let results = [];
-  const userWon = 1;
-  for (let i = 0; i < 5; i++) {
-    let userVal = prompt("Enter Rock, paper or scissors");
-    results[i] = playRound(userVal, computerPlay());
-    console.log(results[i][0]);
+let results = [0, 0];
+function game(btn) {
+  const result = playRound(btn.id, computerPlay());
+  console.log(result);
+  results[0] = result[1] == "player" ? results[0] + 1 : results[0];
+  results[1] = result[1] == "computer" ? results[1] + 1 : results[1];
+  console.log(results);
+  if (results[0] == 5) {
+    let div = document.getElementById("result");
+    div.innerText = `You have won! Final score ${results[0]} : ${results[1]}`;
+    results = [0, 0];
   }
-  results = results.filter((result) => result[1] == userWon);
-  if (results.length >= 3) console.log(`You won ${results.length} times`);
+  if (results[1] == 5) {
+    let div = document.getElementById("result");
+    div.innerText = `You have lost! Final score ${results[0]} : ${results[1]}`;
+    results = [0, 0];
+  }
 }
-game();
+
+const btns = document.body.querySelectorAll("button");
+console.log(btns);
+btns.forEach((btn) =>
+  btn.addEventListener("click", (ev) => {
+    game(btn);
+  })
+);
